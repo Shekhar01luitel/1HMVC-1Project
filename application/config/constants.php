@@ -1,23 +1,25 @@
 <?php
 
-if (isset($_SERVER['SERVER_PORT']))
-{
-	/*
-	|--------------------------------------------------------------------------
-	| Base URL
-	|--------------------------------------------------------------------------
-	*/http://localhost:8001/checkout
-	define('BASE_URL',
-		(!empty($_SERVER['SERVER_PORT'])?$_SERVER['SERVER_PORT']==443?'https':'http':FALSE).
-		"://".(!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:FALSE).':8001'.str_replace(basename($_SERVER['SCRIPT_NAME']),"",$_SERVER['SCRIPT_NAME']));
+if (isset($_SERVER['SERVER_PORT'])) {
+    $isHttps = !empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off';
+    $port = !empty($_SERVER['SERVER_PORT']) ? $_SERVER['SERVER_PORT'] : ($isHttps ? 443 : 80);
 
-	/*
-	|--------------------------------------------------------------------------
-	| Current URL
-	|--------------------------------------------------------------------------
-	*/
-	define('CURRENT_URL', (!empty($_SERVER['SERVER_PORT'])?$_SERVER['SERVER_PORT']==443?'https':'http':FALSE)."://".(!empty($_SERVER['SERVER_NAME'])?$_SERVER['SERVER_NAME']:FALSE).str_replace('//', '/', $_SERVER['REQUEST_URI']));
+    /*
+    |--------------------------------------------------------------------------
+    | Base URL
+    |--------------------------------------------------------------------------
+    */
+    define('BASE_URL',
+        ($isHttps ? 'https' : 'http') . "://" . $_SERVER['SERVER_NAME'] . ':' . $port . str_replace(basename($_SERVER['SCRIPT_NAME']), "", $_SERVER['SCRIPT_NAME']));
+
+    /*
+    |--------------------------------------------------------------------------
+    | Current URL
+    |--------------------------------------------------------------------------
+    */
+    define('CURRENT_URL', ($isHttps ? 'https' : 'http') . "://" . $_SERVER['SERVER_NAME'] . str_replace('//', '/', $_SERVER['REQUEST_URI']));
 }
+
 
 defined('BASEPATH') OR exit('No direct script access allowed');
 
